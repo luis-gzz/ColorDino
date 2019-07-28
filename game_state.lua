@@ -107,6 +107,16 @@ function scene:create( event )
     levelText.y = levelText.height / (display.contentHeight > 510 and 1.05 or 1.75) + levelText.height;
     sceneGroup:insert(levelText)
 
+    local homeBtn = widget.newButton{
+		label = "",
+		defaultFile = "./assets/images/home_btn.png",
+        overFile = "./assets/images/home_btn_down.png",
+		onRelease = onHomeBtnRelease	-- event listener function
+    }
+    homeBtn.x = display.contentWidth - (display.contentHeight > 510 and 20 or 15) ; 
+    homeBtn.y = (display.contentHeight > 510 and 40 or 15) 
+    sceneGroup:insert(homeBtn)
+
     tileMap = generateMap()
     -- tileMap:addEventListener("tap", nextLevel)
     coloredTiles = 0
@@ -151,18 +161,6 @@ function scene:create( event )
     print(utils.randomFloat(0.5, 0.67) * ASTEROID_TIME)
     asteroidTimer = timer.performWithDelay(utils.randomFloat(0.6, 0.75) * ASTEROID_TIME, spawnAsteroid)
     ASTEROID_TIME = 5050
-
-    
-    -- Some listeners
-    -- dino.collision = dinoHasCollided
-    -- dino:addEventListener("collision")
-    -------
-    -------
-    -- WHEN ADDING ASTEROID TIMER DONT FORGET 
-    -- TO ADD STUFF IN APP SUSPEND AND IN 
-    -- SCENE DESTROY
-    -------
-    -------
 
 end
 
@@ -555,6 +553,14 @@ function adListener(event)
     end
 end
 
+function onHomeBtnRelease()
+    composer.removeScene("game_state")
+    local options = {effect = "fade", time = 200}
+    composer.gotoScene("menu_state", options)
+	
+	return true	-- indicates successful touch
+end
+
 function scene:show(event)
 	local sceneGroup = self.view
 	local phase = event.phase
@@ -613,9 +619,11 @@ function scene:destroy(event)
     dino = nil
     tileMap:removeSelf()
     tileMap = nil
-    gameOverBtn.isVisible = false
-    gameOverBtn:removeSelf()
-    gameOverBtn = nil
+    if (gameOverBtn ~= nil) then 
+        gameOverBtn.isVisible = false
+        gameOverBtn:removeSelf()
+        gameOverBtn = nil
+    end
 
 	local sceneGroup = self.view
 	
