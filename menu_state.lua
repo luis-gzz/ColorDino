@@ -61,10 +61,11 @@ local function cancelListener()
     native.setActivityIndicator(false)
 end
 
-local iapOptions = { catalogue=catalogue,
-                    failedListener=failedListener,
-                    cancelledListener=cancelListener, 
-                    }
+local iapOptions = { 
+    catalogue=catalogue,
+    failedListener=failedListener,
+    cancelledListener=cancelListener, 
+}
 
 local haveAds = nil
 
@@ -99,14 +100,13 @@ function scene:create(event)
 
 	playBtn = widget.newButton{
 		label = levelMenu == 1 and "Start" or "Continue lvl. " .. levelMenu,
-		defaultFile = "./assets/images/button_norm.png",
-        overFile = "./assets/images/button_down.png",
+		defaultFile = "./assets/images/button_norm2x.png",
+        overFile = "./assets/images/button_down2x.png",
         font = "./assets/data/nokiafc22.ttf",
-        fontSize = 4,
+        fontSize = 8,
         labelColor = {default = {70/255.0, 78/255.0, 91/255.0}, over = {70/255.0, 78/255.0, 91/255.0}},
 		onRelease = onPlayBtnRelease	-- event listener function
     }
-    playBtn:scale(2, 2)
     buttonGroup:insert(playBtn)
     
     removeAdsBtn = widget.newButton{
@@ -120,9 +120,10 @@ function scene:create(event)
     }
     removeAdsBtn:scale(1, 1)
     removeAdsBtn.y = math.ceil(playBtn.y + removeAdsBtn.height * 2)
+    removeAdsBtn.x = display.contentCenterX - removeAdsBtn.width / 2
     buttonGroup:insert(removeAdsBtn)
-    buttonGroup.x = display.contentCenterX
     buttonGroup.y = (display.contentHeight / 3 * 2) + buttonGroup.height / 2;
+    buttonGroup.x = display.contentCenterX
     
     -- Dino and left right choose buttons
     color = "green"
