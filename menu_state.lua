@@ -13,7 +13,6 @@ local dataCabinet = require("plugin.GBCDataCabinet")
 local utils = require("utils")
 local iap = require("plugin.iap_badger")
 
-
 --------------------------------------------
 
 -- forward declarations and other locals
@@ -62,7 +61,6 @@ local function cancelListener()
     native.setActivityIndicator(false)
 end
 
-
 local iapOptions = { catalogue=catalogue,
                     failedListener=failedListener,
                     cancelledListener=cancelListener, 
@@ -70,16 +68,10 @@ local iapOptions = { catalogue=catalogue,
 
 local haveAds = nil
 
-function scene:create( event )
-    print(display.contentWidth)
-    print(display.contentHeight)
+function scene:create(event)
+    display.setDefault("background", utils.hex2rgb("#b9d4e2"))
     sceneGroup = self.view
     getSaveData()
-
-	-- Called when the scene's view does not exist.
-	-- 
-	-- INSERT code here to initialize the scene
-	-- e.g. add display objects to 'sceneGroup', add touch listeners, etc.
     
     -- iap
     iap.init(iapOptions)
@@ -115,8 +107,6 @@ function scene:create( event )
 		onRelease = onPlayBtnRelease	-- event listener function
     }
     playBtn:scale(2, 2)
-	-- playBtn.x = display.contentCenterX
-    -- playBtn.y = (display.contentHeight / 3 * 2) + (playBtn.height / 2)
     buttonGroup:insert(playBtn)
     
     removeAdsBtn = widget.newButton{
@@ -255,6 +245,7 @@ function onPlayBtnRelease()
     -- go to level1.lua scene
     if (not dinoLocked) then 
         local options = {effect = "fade", time = 500, params = {curr_level = levelMenu, dino_color = color, ads = 0, enableAds = haveAds}}
+        composer.removeScene("menu_state")
         composer.gotoScene("game_state", options)
     end
 	
@@ -375,15 +366,11 @@ function scene:show( event )
 	local sceneGroup = self.view
 	local phase = event.phase
 	
-	if phase == "will" then
-        -- Called when the scene is still off screen and is about to move on screen
+    if phase == "will" then
+        getSaveData()
 
     elseif phase == "did" then
         dino:play()
-		-- Called when the scene is now on screen
-		-- 
-		-- INSERT code here to make the scene come alive
-		-- e.g. start timers, begin animation, play audio, etc.
 	end	
 end
 
@@ -392,27 +379,33 @@ function scene:hide( event )
 	local phase = event.phase
 	
 	if event.phase == "will" then 
-		-- Called when the scene is on screen and is about to move off screen
-		--
-		-- INSERT code here to pause the scene
-		-- e.g. stop timers, stop animation, unload sounds, etc.)
 	elseif phase == "did" then
-		-- Called when the scene is now off screen
 	end	
 end
 
 function scene:destroy( event )
 	local sceneGroup = self.view
 	
-	-- Called prior to the removal of scene's "view" (sceneGroup)
-	-- 
-	-- INSERT code here to cleanup the scene
-	-- e.g. remove display objects, remove touch listeners, save state, etc.
-	
 	if playBtn then
-		playBtn:removeSelf()	-- widgets must be manually removed
-		playBtn = nil
-	end
+		playBtn:removeSelf(); playBtn = nil
+    end
+
+    if removeAdsBtn then
+		removeAdsBtn:removeSelf(); removeAdsBtn = nil
+    end
+
+    if leftBtn then
+		leftBtn:removeSelf(); leftBtn = nil
+    end
+
+    if rightBtn then
+		rightBtn:removeSelf(); rightBtn = nil
+    end
+    
+    if dino then 
+        dino:removeSelf()
+		dino = nil
+    end
 end
 
 ---------------------------------------------------------------------------------

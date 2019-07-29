@@ -22,7 +22,7 @@ local screenW, screenH, halfW = display.actualContentWidth, display.actualConten
 local shakeamount = 0
 local bgColors = {"#e4c5b3", "#b3d5e4", "#d8bfd8", "#d8bfd8", "#e4c5b3", "#c1d6c2", "#b3d5e4", "#c1d6c2"}
 
-local level, gotEmAll
+local level, gotEmAlll, levelText, instructions
 
 local tileMap
 local totalTiles, coloredTiles, destroyedTiles
@@ -98,11 +98,10 @@ function scene:create( event )
     local levelTextOptions = {
         text = "lvl. " .. level,
         x = display.contentCenterX,
-        font = "./assets/data/3Dventure.ttf",
-        fontSize = 32,
+        font = "./assets/data/3Dventure.ttf", fontSize = 32,
         align = "center",
     }
-    local levelText = display.newText(levelTextOptions)
+    levelText = display.newText(levelTextOptions)
     levelText:setFillColor(utils.hex2rgb("#213038"))
     levelText.y = levelText.height / (display.contentHeight > 510 and 1.05 or 1.75) + levelText.height;
     sceneGroup:insert(levelText)
@@ -162,6 +161,17 @@ function scene:create( event )
     asteroidTimer = timer.performWithDelay(utils.randomFloat(0.6, 0.75) * ASTEROID_TIME, spawnAsteroid)
     ASTEROID_TIME = 5050
 
+    if (level == 1) then 
+        local instructionsOptions = {
+            text = "Swipe left/right to turn. Tap to jump.",
+            x = display.contentCenterX, y = tileMap.y + tileMap.height * 1.2,
+            font = "./assets/data/nokiafc22.ttf", fontSize = 12,
+            align = "center", width = display.contentWidth / 4 * 3
+        }
+        instructions = display.newText(instructionsOptions)
+        instructions:setFillColor(utils.hex2rgb("#000000"))
+        sceneGroup:insert(instructions)
+    end
 end
 
 function gameSceneReseter(adCallios)
@@ -171,14 +181,14 @@ function gameSceneReseter(adCallios)
 end
 
 local function update (event)
-    if (dino ~= nil and coloredTiles ~= nil and destroyedTiles ~= nil and destroyedTiles ~= nil) then 
+    if (dino and coloredTiles and destroyedTiles and destroyedTiles and tileMap) then 
 
         if not isDinoFalling and not gotEmAll then 
             dinoRect.x = dino.x; dinoRect.y = dino.y + 5
 
             dinoIsOnTile = false
             local collisionTiles = hasDinoCollidedTiles(dinoRect, tileMap)
-            for k,tile in pairs(collisionTiles) do
+            for k, tile in pairs(collisionTiles) do
                 dinoIsOnTile = true
                 if (tile.sequence ~= color) then 
                     tile:setSequence(color)
@@ -208,7 +218,6 @@ local function update (event)
         end
 
         if (not isDinoFalling and (coloredTiles + destroyedTiles >= totalTiles and coloredTiles >= 3)) then 
-            --- THE GAME IS WON --- 
             if (not gotEmAll) then
                 print("got em all")
                 dinoMovementAllowed = false
@@ -378,8 +387,6 @@ function killRockAndTile(self, event)
     self.isAlive = false
     self:removeEventListener("collision")
 
-    
-
     if (event.other.iAmAlive and event.other.sequence ~= color) then
         destroyedTiles = destroyedTiles + 1
     end
@@ -449,6 +456,11 @@ end
 function touchControls(event)
     local swipeDist = utils.distance(event.xStart, event.yStart, event.x, event.y)
     local angle = utils.angleBetweenTwoPts(event.xStart, event.yStart, event.x, event.y)
+
+    if event.phase == "ended" and level == 1 and instructions ~= nil then
+        instructions:removeSelf()
+        instructions = nil
+    end
 
     if event.phase == "ended" and not isDinoFalling and dinoMovementAllowed then
         print("swipe DISTANCE: " .. swipeDist)
@@ -554,10 +566,10 @@ function adListener(event)
 end
 
 function onHomeBtnRelease()
+    local options = {effect = "fade", time = 100}
     composer.removeScene("game_state")
-    local options = {effect = "fade", time = 200}
     composer.gotoScene("menu_state", options)
-	
+
 	return true	-- indicates successful touch
 end
 
@@ -566,12 +578,7 @@ function scene:show(event)
 	local phase = event.phase
 	
 	if phase == "will" then
-		-- Called when the scene is still off screen and is about to move on screen
 	elseif phase == "did" then
-		-- Called when the scene is now on screen
-		-- 
-		-- INSERT code here to make the scene come alive
-        -- e.g. start timers, begin animation, play audio, etc.
         physics.start()
 	end
 end
@@ -582,23 +589,14 @@ function scene:hide(event)
 	local phase = event.phase
 	
 	if event.phase == "will" then
-		-- Called when the scene is on screen and is about to move off screen
-		--
-		-- INSERT code here to pause the scene
-		-- e.g. stop timers, stop animation, unload sounds, etc.)
-		physics.stop()
+        physics.stop()
+
 	elseif phase == "did" then
-		-- Called when the scene is now off screen
 	end	
 	
 end
 
 function scene:destroy(event)
-
-	-- Called prior to the removal of scene's "view" (sceneGroup)
-	-- 
-	-- INSERT code here to cleanup the scene
-    -- e.g. remove display objects, remove touch listeners, save state, etc.
     Runtime:removeEventListener("enterFrame", update)
     Runtime:removeEventListener("touch", touchControls)
     Runtime:removeEventListener("system", onSystemEvent)
@@ -619,10 +617,21 @@ function scene:destroy(event)
     dino = nil
     tileMap:removeSelf()
     tileMap = nil
+
     if (gameOverBtn ~= nil) then 
         gameOverBtn.isVisible = false
         gameOverBtn:removeSelf()
         gameOverBtn = nil
+    end
+
+    if (homeBtn ~= nil) then 
+        homeBtn:removeSelf()
+        homeBtn = nil
+    end
+
+    if (levelText ~= nil) then 
+        levelText:removeSelf()
+        levelText = nil
     end
 
 	local sceneGroup = self.view
