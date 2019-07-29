@@ -13,8 +13,6 @@ local utils = require("utils")
 local widget = require "widget"
 local dataCabinet = require("plugin.GBCDataCabinet")
 local appodeal = require( "plugin.appodeal" )
-
-
 --------------------------------------------
 
 -- forward declarations and other locals
@@ -58,7 +56,7 @@ local dinoSequenceData = {
 }
 
 local asteroidPool, asteroidTimer
-local ASTEROID_TIME = 2500
+local ASTEROID_TIME = 2200
 local asteroidSheetOptions = {
     --required parameters
     width = 22,
@@ -378,7 +376,7 @@ function killRockAndTile(self, event)
     shakeamount = 15
     self:setLinearVelocity(0, 0)
 
-    if (utils.distance(dino.x, dino.y, self.x, self.y) < 15) then
+    if (utils.distance(dino.x, dino.y, self.x, self.y) < 20) then
         dinoPerish()
     end
 
