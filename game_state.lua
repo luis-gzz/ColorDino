@@ -84,8 +84,6 @@ function scene:create( event )
     sceneGroup.originalY = sceneGroup.y
     display.setDefault("background", utils.hex2rgb(bgColors[math.random(#bgColors)]))
 
-	-- We need physics started to add bodies, but we don't want the simulaton
-	-- running until the scene is on the screen.
     physics.start()
     physics.pause()
 
