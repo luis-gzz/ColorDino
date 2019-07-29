@@ -90,7 +90,7 @@ function scene:create( event )
     physics.pause()
 
     if (haveAds) then
-        appodeal.init( adListener, { appKey="e3bc6a644f13972d787c0f785a9334c051bd7fb4a9ee9df2", testMode = true } )
+        appodeal.init( adListener, { appKey="e3bc6a644f13972d787c0f785a9334c051bd7fb4a9ee9df2", testMode = false } )
     end
     
     local levelTextOptions = {
@@ -101,7 +101,7 @@ function scene:create( event )
     }
     levelText = display.newText(levelTextOptions)
     levelText:setFillColor(utils.hex2rgb("#213038"))
-    levelText.y = levelText.height / (display.contentHeight > 510 and 1.05 or 1.75) + levelText.height;
+    levelText.y = levelText.height / (display.contentHeight > 510 and .8 or 1.75) + levelText.height;
     sceneGroup:insert(levelText)
 
     local homeBtn = widget.newButton{
