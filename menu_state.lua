@@ -89,7 +89,6 @@ function scene:create(event)
     }
     local titleText = display.newText(titleTextOptions)
     titleText:setFillColor(utils.hex2rgb("#213038"))
-    print(titleText.height)
     titleText.y = (display.contentHeight / 3) - (titleText.height / 2);
     titleText.x = display.contentCenterX
 
@@ -182,7 +181,7 @@ end
 function getSaveData() 
     local loadSuccess = dataCabinet.load("game_save")
     if (loadSuccess == false) then
-        print("No such cabinet... creating one")
+        -- print("No such cabinet... creating one")
         dataCabinet.createCabinet("game_save")
         dataCabinet.set("game_save", "curr_level", 1)
         dataCabinet.set("game_save", "ads", true)
@@ -190,10 +189,10 @@ function getSaveData()
         levelMenu = 1
         haveAds = true
     else 
-        print("Cabinet exists... loading data")
+        -- print("Cabinet exists... loading data")
         levelMenu = dataCabinet.get("game_save", "curr_level")
         haveAds = dataCabinet.get("game_save", "ads")
-        print(levelMenu)
+        -- print(levelMenu)
     end
 end
 
@@ -344,7 +343,7 @@ function purchaseListener(product)
     native.setActivityIndicator(false)
     native.showAlert("Hooray!", "You are now playing ad free!", {"Sounds Good"})
 
-    print "Purchase made"
+    -- print "Purchase made"
 end
 
 function restoreListener(productName, event)
@@ -360,7 +359,7 @@ function restoreListener(productName, event)
     native.setActivityIndicator(false)
     native.showAlert("Hooray!", "You are now playing ad free!", {"Sounds Good"})
     
-    print "restored!"
+    -- print "restored!"
 end
 
 function scene:show( event )

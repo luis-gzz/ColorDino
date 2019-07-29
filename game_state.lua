@@ -153,7 +153,7 @@ function scene:create( event )
         sceneGroup:insert(rock)
     end
 
-    print(utils.randomFloat(0.5, 0.67) * ASTEROID_TIME)
+    -- print(utils.randomFloat(0.5, 0.67) * ASTEROID_TIME)
     asteroidTimer = timer.performWithDelay(utils.randomFloat(0.6, 0.75) * ASTEROID_TIME, spawnAsteroid)
     ASTEROID_TIME = 5050
 
@@ -194,7 +194,7 @@ local function update (event)
             end
 
             if (not dinoIsOnTile and not isDinoJumping) then 
-                print("dino fell")
+                -- print("dino fell")
                 dinoPerish()
             end
 
@@ -206,7 +206,7 @@ local function update (event)
                 end
             elseif ((vx == 0 and vy == 0) and not isDinoJumping and not isDinoFalling) then
                 if (dino.sequence ~= "idle") then 
-                    print("setting to idle")
+                    -- print("setting to idle")
                     dino:setSequence("idle")
                     dino:play()
                 end
@@ -215,7 +215,7 @@ local function update (event)
 
         if (not isDinoFalling and (coloredTiles + destroyedTiles >= totalTiles and coloredTiles >= 3)) then 
             if (not gotEmAll) then
-                print("got em all")
+                -- print("got em all")
                 dinoMovementAllowed = false
                 dino:setLinearVelocity(0, 0)
                 dino:setSequence("idle")
@@ -227,7 +227,7 @@ local function update (event)
 
         if not isThereGameOverBtn and isDinoFalling and dino.y > display.contentHeight + 10 then
             isThereGameOverBtn = true
-            print("fell all teh way")
+            -- print("fell all teh way")
             addGameOverBtn("Reset Level!")
         end
 
@@ -242,7 +242,6 @@ local function update (event)
 end
 
 function dinoPerish()
-    print("here")
     isDinoFalling = true
     dino:setLinearVelocity(0, 0)
     dino:toBack()
@@ -440,11 +439,11 @@ function spawnAsteroid()
     local ySpeed = normY * speed
 
     nextRock.isAlive = true
-    print("spawning rock")
+    -- print("spawning rock")
     nextRock:setLinearVelocity(xSpeed, ySpeed)
     nextRock:addEventListener("collision")
 
-    print(utils.randomFloat(0.5, 0.67) * ASTEROID_TIME)
+    -- print(utils.randomFloat(0.5, 0.67) * ASTEROID_TIME)
     asteroidTimer = timer.performWithDelay(utils.randomFloat(0.5, 0.67) * ASTEROID_TIME, spawnAsteroid)
 
 end
@@ -459,10 +458,10 @@ function touchControls(event)
     end
 
     if event.phase == "ended" and not isDinoFalling and dinoMovementAllowed then
-        print("swipe DISTANCE: " .. swipeDist)
-        print("swipe ANGLE: " .. angle)
+        -- print("swipe DISTANCE: " .. swipeDist)
+        -- print("swipe ANGLE: " .. angle)
         if (swipeDist < 10 and not isDinoJumping) then
-            print("jump!")
+            -- print("jump!")
             isDinoJumping = true;
             dinoJumpTimer = timer.performWithDelay(350, stopDinoJump)
             -- jumpingTimer.start(.35, stopJumping, 1);
@@ -470,21 +469,21 @@ function touchControls(event)
             dino:play()
         elseif (swipeDist >= 10 and ((angle > -45 and angle <= 0) or (angle < 45 and angle >= 0))) then
             dino:setLinearVelocity(0, dino_RUN_SPEED)
-            print("Down")
+            -- print("Down")
 
         elseif (swipeDist >= 10 and ((angle >= -180 and angle < -135) or (angle <= 180 and angle > 135))) then
             dino:setLinearVelocity(0, -dino_RUN_SPEED)
-            print("Up")
+            -- print("Up")
 
         elseif (swipeDist >= 10 and (angle > 45 and angle <= 135)) then
             dino:setLinearVelocity(dino_RUN_SPEED, 0)
             dino.xScale = 1 
-            print("Right")
+            -- print("Right")
 
         elseif (swipeDist >= 10 and (angle < -45 and angle >= -135)) then
             dino:setLinearVelocity(-dino_RUN_SPEED, 0)
             dino.xScale = -1 
-            print("Left")
+            -- print("Left")
 
         end
 
@@ -495,7 +494,7 @@ function nextLevel()
     level = level + 1
     adCalls = adCalls + 1
 
-    print("NEXT LEVEL: " .. level)
+    -- print("NEXT LEVEL: " .. level)
 
     local loadSuccess = dataCabinet.load("game_save")
     if (loadSuccess) then
@@ -504,7 +503,7 @@ function nextLevel()
     end
 
     if (haveAds and adCalls > 3 and appodeal.isLoaded("interstitial")) then
-        print ("NEXT LEVEL: " .. level)
+        -- print ("NEXT LEVEL: " .. level)
         appodeal.show("interstitial")
     else
         gameSceneReseter(adCalls)
@@ -513,7 +512,7 @@ function nextLevel()
 end
 
 function resetLevel()
-    print ("RESET LEVEL: " .. level)
+    -- print ("RESET LEVEL: " .. level)
     adCalls = adCalls + 1
 
     if (haveAds and adCalls > 3 and appodeal.isLoaded("interstitial")) then
@@ -556,7 +555,7 @@ function adListener(event)
             gameSceneReseter(3)
         end
     elseif (event.phase == "closed") then 
-        print ("NEXT LEVEL: " .. level)
+        -- print ("NEXT LEVEL: " .. level)
         gameSceneReseter(0)
     end
 end
