@@ -67,7 +67,7 @@ local rockSequenceData = {
     {name="rock", frames={1}, loopCount = 1, time = 475},
 }
 
-local adCalls, haveAds
+local adCalls, haveAds, minBeforeAds
 
 local gameOverBtn, isThereGameOverBtn
 
@@ -75,6 +75,7 @@ function scene:create( event )
     -- physics.setDrawMode( "hybrid" )
 
     gotEmAll = false; isThereGameOverBtn = false
+    minBeforeAds = 4
     adCalls = event.params.ads
     haveAds = event.params.enableAds
     level = event.params.curr_level
@@ -159,10 +160,10 @@ function scene:create( event )
 
     if (level == 1) then 
         local instructionsOptions = {
-            text = "Swipe left/right to turn. Tap to jump.",
+            text = "Swipe to turn. Tap to jump.",
             x = display.contentCenterX, y = tileMap.y + tileMap.height * 1.2,
             font = "./assets/data/nokiafc22.ttf", fontSize = 12,
-            align = "center", width = display.contentWidth / 4 * 3
+            align = "center", width = display.contentWidth / 4 * 2
         }
         instructions = display.newText(instructionsOptions)
         instructions:setFillColor(utils.hex2rgb("#000000"))
@@ -502,7 +503,7 @@ function nextLevel()
         dataCabinet.save("game_save")
     end
 
-    if (haveAds and adCalls > 3 and appodeal.isLoaded("interstitial")) then
+    if (haveAds and adCalls > minBeforeAds and appodeal.isLoaded("interstitial")) then
         -- print ("NEXT LEVEL: " .. level)
         appodeal.show("interstitial")
     else
@@ -515,7 +516,7 @@ function resetLevel()
     -- print ("RESET LEVEL: " .. level)
     adCalls = adCalls + 1
 
-    if (haveAds and adCalls > 3 and appodeal.isLoaded("interstitial")) then
+    if (haveAds and adCalls > minBeforeAds and appodeal.isLoaded("interstitial")) then
         appodeal.show("interstitial")
     else
         gameSceneReseter(adCalls)

@@ -34,6 +34,7 @@ settings =
 		{
 			UIStatusBarHidden = false,
 			UILaunchStoryboardName = "LaunchScreen",
+            NSAppTransportSecurity = { NSAllowsArbitraryLoads=true },
 		},
 	},
 
@@ -44,13 +45,41 @@ settings =
         ["plugin.GBCDataCabinet"] = {
             publisherId = "com.gamesbycandlelight",
         },
-        ["plugin.appodeal"] = {
-            publisherId = "com.coronalabs"
-        },
         ["plugin.iap_badger"] =
         {
             publisherId = "uk.co.happymongoose",
         },
+
+        --- APPODEAL ---
+        -- Base
+        ['plugin.appodeal.base'] = { publisherId = 'com.coronalabs' },
+        ['plugin.appodeal.GoogleAdMob'] = { publisherId = 'com.coronalabs' },
+        ['plugin.appodeal.StartApp'] = { publisherId = 'com.coronalabs' },
+
+        -- Banner
+        ['plugin.appodeal.AppLovin'] = { publisherId = 'com.coronalabs' },
+        ['plugin.appodeal.FacebookAudience'] = { publisherId = 'com.coronalabs' },
+        ['plugin.appodeal.Flurry'] = { publisherId = 'com.coronalabs' },
+        ['plugin.appodeal.InMobi'] = { publisherId = 'com.coronalabs' },
+        ['plugin.appodeal.MyTarget'] = { publisherId = 'com.coronalabs' },
+        ['plugin.appodeal.AmazonAds'] = { publisherId = 'com.coronalabs' },
+        ['plugin.appodeal.TwitterMoPub'] = { publisherId = 'com.coronalabs' },
+
+        -- Interstitial
+        ['plugin.appodeal.AdColony'] = { publisherId = 'com.coronalabs' },
+        ['plugin.appodeal.AppLovin'] = { publisherId = 'com.coronalabs' },
+        ['plugin.appodeal.Chartboost'] = { publisherId = 'com.coronalabs' },
+        ['plugin.appodeal.FacebookAudience'] = { publisherId = 'com.coronalabs' },
+        ['plugin.appodeal.Flurry'] = { publisherId = 'com.coronalabs' },
+        ['plugin.appodeal.InMobi'] = { publisherId = 'com.coronalabs' },
+        ['plugin.appodeal.IronSource'] = { publisherId = 'com.coronalabs' },
+        ['plugin.appodeal.Mobvista'] = { publisherId = 'com.coronalabs' },
+        ['plugin.appodeal.MyTarget'] = { publisherId = 'com.coronalabs' },
+        ['plugin.appodeal.StartApp'] = { publisherId = 'com.coronalabs' },
+        ['plugin.appodeal.Ogury'] = { publisherId = 'com.coronalabs' },
+        ['plugin.appodeal.AmazonAds'] = { publisherId = 'com.coronalabs' },
+        ['plugin.appodeal.TwitterMoPub'] = { publisherId = 'com.coronalabs' },
+        --- APPODEAL ---
     },
 
 	--
