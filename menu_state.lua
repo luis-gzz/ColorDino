@@ -384,7 +384,11 @@ function scene:hide( event )
 end
 
 function scene:destroy( event )
-	local sceneGroup = self.view
+    local sceneGroup = self.view
+    
+    if titleText then
+        titleText:removeSelf(); titleText = nil
+    end
 	
 	if playBtn then
 		playBtn:removeSelf(); playBtn = nil

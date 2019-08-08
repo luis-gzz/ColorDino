@@ -132,6 +132,12 @@ function scene:create( event )
     dinoRect:setFillColor(0,0,0,0)
     sceneGroup:insert(dino)
     sceneGroup:insert(dinoRect)
+
+    local runLevel = level
+    while runLevel > 100 do 
+        runLevel = runLevel - 100
+    end
+    dino_RUN_SPEED = 80 + (.5 * runLevel)
 	
     -- add physics to the crate
     local offsetRectParams = { halfWidth=5, halfHeight=6, x=1, y=2, angle=0 }
@@ -214,7 +220,7 @@ local function update (event)
             end
         end
 
-        if (not isDinoFalling and (coloredTiles + destroyedTiles >= totalTiles and coloredTiles >= 3)) then 
+        if (not isDinoFalling and (coloredTiles + destroyedTiles >= totalTiles) and (coloredTiles >= 3)) then 
             if (not gotEmAll) then
                 -- print("got em all")
                 dinoMovementAllowed = false
@@ -264,7 +270,11 @@ function generateMap()
                     ,{0,0,0,0,1}
                     ,{1,1,1,1,1}}
 
-    local tempLvl = (level > 100) and (level - 100) or level
+    local tempLvl = level
+    while tempLvl > 100 do
+        tempLvl = tempLvl - 100
+    end 
+
     if (tempLvl <= 50) then
         mapSizeX = 5
         mapSizeY = 7
