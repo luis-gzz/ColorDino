@@ -322,8 +322,11 @@ function onRemoveAdsConfirmation(event)
     if ( event.action == "clicked" ) then
         local i = event.index
         if (i == 1) then
-            iap.purchase("removeAds", purchaseListener)
-            native.setActivityIndicator(true)
+            if (haveAds) then 
+                iap.purchase("removeAds", purchaseListener)
+                native.setActivityIndicator(true)
+            else 
+            end
         elseif (i == 2) then
             iap.restore(false, restoreListener, failedListener)
             native.setActivityIndicator(true)
@@ -404,6 +407,10 @@ function scene:destroy( event )
 
     if rightBtn then
 		rightBtn:removeSelf(); rightBtn = nil
+    end
+
+    if updateTextTimer then
+        updateTextTimer:removeSelf(); updateTextTimer = nil
     end
     
     if dino then 

@@ -137,7 +137,7 @@ function scene:create( event )
     while runLevel > 100 do 
         runLevel = runLevel - 100
     end
-    dino_RUN_SPEED = 80 + (.5 * runLevel)
+    dino_RUN_SPEED = 80 + (.375 * runLevel)
 	
     -- add physics to the crate
     local offsetRectParams = { halfWidth=5, halfHeight=6, x=1, y=2, angle=0 }
@@ -373,7 +373,6 @@ function rockHasCollided(self, event)
     if (event.phase == "began") then 
         if (event.other.myName == "tile" and event.other.id == self.id) then 
             timer.performWithDelay(1, function() return killRockAndTile(self, event) end)
-            
         end
     elseif (event.phase == "ended") then
         
@@ -619,25 +618,31 @@ function scene:destroy(event)
         timer.cancel(asteroidTimer)
     end
 
-    dino:removeSelf()
-    dino = nil
-    tileMap:removeSelf()
-    tileMap = nil
+    if dino then
+        dino:removeSelf(); dino = nil
+    end
+
+    if tileMap then
+        tileMap:removeSelf(); tileMap = nil
+    end
 
     if (gameOverBtn ~= nil) then 
         gameOverBtn.isVisible = false
-        gameOverBtn:removeSelf()
-        gameOverBtn = nil
+        gameOverBtn:removeSelf(); gameOverBtn = nil
     end
 
     if (homeBtn ~= nil) then 
-        homeBtn:removeSelf()
-        homeBtn = nil
+        homeBtn:removeSelf(); homeBtn = nil
     end
 
     if (levelText ~= nil) then 
-        levelText:removeSelf()
-        levelText = nil
+        levelText:removeSelf(); levelText = nil
+    end
+
+    for _, rock in ipairs(asteroidPool) do
+        if rock then
+            rock:removeSelf(); rock = nil
+        end
     end
 
 	local sceneGroup = self.view
