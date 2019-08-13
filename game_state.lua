@@ -52,7 +52,7 @@ local dinoSequenceData = {
     { name="idle", frames={1, 2, 3, 4}, loopCount = 0, time = 475},
     { name="walk", frames={5, 6, 7, 8, 9, 10}, loopCount = 0, time = 450},
     { name="hurt", frames={14, 15, 16, 17}, loopCount = 1, time = 500},
-    { name="jump", frames={19, 20, 21}, loopCount = 1, time = 600},
+    { name="jump", frames={19, 20, 21, 22, 23}, loopCount = 1, time = 500},
 }
 
 local asteroidPool, asteroidTimer
@@ -137,7 +137,7 @@ function scene:create( event )
     while runLevel > 100 do 
         runLevel = runLevel - 100
     end
-    dino_RUN_SPEED = 80 + (.375 * runLevel)
+    dino_RUN_SPEED = 80 + (.325 * runLevel)
 	
     -- add physics to the crate
     local offsetRectParams = { halfWidth=5, halfHeight=6, x=1, y=2, angle=0 }
@@ -193,7 +193,7 @@ local function update (event)
             local collisionTiles = hasDinoCollidedTiles(dinoRect, tileMap)
             for k, tile in pairs(collisionTiles) do
                 dinoIsOnTile = true
-                if (tile.sequence ~= color) then 
+                if (tile.sequence ~= color and tile.iAmAlive == true) then 
                     tile:setSequence(color)
                     tile:play()
                     coloredTiles = coloredTiles + 1
@@ -381,24 +381,29 @@ end
 
 function killRockAndTile(self, event)
     shakeamount = 15
-    self:setLinearVelocity(0, 0)
-
-    if (utils.distance(dino.x, dino.y, self.x, self.y) < 20) then
-        dinoPerish()
-    end
-
-    self.x = -50
-    self.y = -50
-    self.isAlive = false
-    self:removeEventListener("collision")
-
-    if (event.other.iAmAlive and event.other.sequence ~= color) then
-        destroyedTiles = destroyedTiles + 1
-    end
-    event.other.iAmAlive = false
-    event.other:toBack()
-    event.other:setLinearVelocity(0, 100)
     
+    if self and dino then 
+        if (utils.distance(dino.x, dino.y, self.x, self.y) < 20) then
+            dinoPerish()
+        end
+
+        self:setLinearVelocity(0, 0)
+        self.x = -50
+        self.y = -50
+        self.isAlive = false
+        self:removeEventListener("collision")
+    end
+
+    if event.other then
+        if (event.other.iAmAlive and event.other.sequence ~= color) then
+            destroyedTiles = destroyedTiles + 1
+        end
+
+        event.other.iAmAlive = false
+        event.other:toBack()
+        event.other:setLinearVelocity(0, 100)
+    end
+        
 end
 
 function spawnAsteroid()
@@ -473,8 +478,7 @@ function touchControls(event)
         if (swipeDist < 10 and not isDinoJumping) then
             -- print("jump!")
             isDinoJumping = true;
-            dinoJumpTimer = timer.performWithDelay(350, stopDinoJump)
-            -- jumpingTimer.start(.35, stopJumping, 1);
+            dinoJumpTimer = timer.performWithDelay(360, stopDinoJump)
             dino:setSequence("jump")
             dino:play()
         elseif (swipeDist >= 10 and ((angle > -45 and angle <= 0) or (angle < 45 and angle >= 0))) then
