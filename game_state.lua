@@ -563,7 +563,7 @@ end
 function adListener(event)
  
     if (event.phase == "init") then  -- Successful initialization
-        appodeal.show("banner" , {placement = "BannerBottom"})
+        -- appodeal.show("banner" , {placement = "BannerBottom"})
     elseif (event.phase == "failed") then
         if event.type == "interstitial" then
             gameSceneReseter(3)
@@ -610,9 +610,9 @@ function scene:destroy(event)
     Runtime:removeEventListener("touch", touchControls)
     Runtime:removeEventListener("system", onSystemEvent)
 
-    if (haveAds) then
-        appodeal.hide("banner")
-    end
+    -- if (haveAds) then
+    --     appodeal.hide("banner")
+    -- end
 
     if (dinoJumpTimer ~= nil) then
         timer.cancel(dinoJumpTimer)
